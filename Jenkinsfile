@@ -30,10 +30,10 @@ docker push shebin512/coit-frontend:latest'''
         echo 'Deploy to QA'
         sh '''az aks create \\
     --resource-group myResourceGroup \\
-    --name myAKSCluster \\
-    --node-count 2 \\
-    --generate-ssh-keys \\
-    --attach-acr <acrName>'''
+    --name coitAKSCluster \\
+    --node-count 1 \\
+    --generate-ssh-keys #\\
+#    --attach-acr <acrName>'''
       }
     }
 
