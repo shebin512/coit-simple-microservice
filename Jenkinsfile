@@ -28,7 +28,7 @@ docker push shebin512/coit-frontend:latest'''
     stage('Cluster setup') {
       steps {
         echo 'Setup Cluster'
-        sh 'az aks create --resource-group coitResourceGroup --name coitQACluster --node-count 1 --generate-ssh-keys'
+        sh 'az aks create --resource-group coitResourceGroup --name coitQACluster --node-vm-size Standard_D2ds_v5 --node-count 1 --generate-ssh-keys'
       }
     }
 
