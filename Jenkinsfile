@@ -28,12 +28,42 @@ docker push shebin512/coit-frontend:latest'''
     stage('Deploy to QA') {
       steps {
         echo 'Deploy to QA'
-        sh '''az aks create \\
-    --resource-group myResourceGroup \\
-    --name coitAKSCluster \\
-    --node-count 1 \\
-    --generate-ssh-keys #\\
-#    --attach-acr <acrName>'''
+        sh '''az aks create --resource-group coitResourceGroup --name coitQACluster --node-count 1 --generate-ssh-keys
+
+az aks get-credentials --resource-group coitResourceGroup --name coitQACluster
+
+kubectl get nodes
+
+kubectl apply \\
+    -f resource-manifests/multicloud/coit-config-map.yaml \\
+    -f resource-manifests/multicloud/coit-backend1-deployment.yaml \\
+    -f resource-manifests/multicloud/coit-backend2-deployment.yaml \\
+    -f resource-manifests/multicloud/coit-frontend-deployment.yaml \\
+    -f resource-manifests/multicloud/service-coit-backend1-lb.yaml \\
+    -f resource-manifests/multicloud/service-coit-backend2.yaml \\
+    -f resource-manifests/multicloud/service-coit-frontend-lb.yaml \\
+    -f resource-manifests/multicloud/hpa-coit-frontend.yaml \\
+    -f resource-manifests/multicloud/ingress-coit-frontend.yaml
+
+# kubectl get service azure-vote-front --watch
+
+
+kubectl get all -o wide
+
+'''
+      }
+    }
+
+    stage('Test') {
+      steps {
+        echo 'Testing...'
+      }
+    }
+
+    stage('Teardown') {
+      steps {
+        echo 'Teardown the cluster'
+        sh 'az group delete --name coitResourceGroup --yes --no-wait'
       }
     }
 
