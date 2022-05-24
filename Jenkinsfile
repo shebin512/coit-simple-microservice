@@ -25,12 +25,17 @@ docker push shebin512/coit-frontend:latest'''
       }
     }
 
+    stage('Cluster setup') {
+      steps {
+        echo 'Setup Cluster'
+        sh 'az aks create --resource-group coitResourceGroup --name coitQACluster --node-count 1 --generate-ssh-keys'
+      }
+    }
+
     stage('Deploy to QA') {
       steps {
         echo 'Deploy to QA'
-        sh '''az aks create --resource-group coitResourceGroup --name coitQACluster --node-count 1 --generate-ssh-keys
-
-az aks get-credentials --resource-group coitResourceGroup --name coitQACluster
+        sh '''az aks get-credentials --resource-group coitResourceGroup --name coitQACluster
 
 kubectl get nodes
 
@@ -54,7 +59,7 @@ kubectl get all -o wide
       }
     }
 
-    stage('Test') {
+    stage('Testing...') {
       steps {
         echo 'Testing...'
       }
