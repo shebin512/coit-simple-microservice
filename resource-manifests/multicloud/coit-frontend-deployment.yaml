@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment                                          # 1
+metadata:
+  name: coit-frontend
+  labels:
+    app: coit-frontend
+spec:
+  selector:
+    matchLabels:
+      app: coit-frontend
+  replicas: 4                                             # 2
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate                                   # 3
+    rollingUpdate: 
+      maxUnavailable: 1                                   # 4
+      maxSurge: 1                                         # 5
+  template:
+    metadata:
+      labels:
+        app: coit-frontend                                  # 6
+    spec:
+      # volumes:
+      #   - name: nginx-data-root
+      #     persistentVolumeClaim:
+      #       claimName: nginx-root
+      containers:
+        - image: shebin512/coit-frontend:latest
+          # imagePullPolicy: IfNotPresent                         # 7
+          imagePullPolicy: Always                         # 7
+          name: coit-frontend
+          ports:
+            - containerPort: 80
+          # volumeMounts:
+          #   - mountPath: /var/www/html
+          #     name: nginx-data-root
